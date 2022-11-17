@@ -5,7 +5,7 @@ import multer from 'multer'
 import fs from 'fs'
 
 import { mongoDB } from './variables.js'
-import { create, getAll, remove, update } from './controllers/TodoController.js'
+import { create, getAll, getOne, remove, update } from './controllers/TodoController.js'
 import { todoCreateValidation } from './validations.js'
 import handleValidationErrors from './utils/handleValidationErrors.js'
 
@@ -36,6 +36,7 @@ app.use(cors())
 app.use('/uploads', express.static('uploads'))
 
 app.get('/todos', getAll)
+app.get('/todos/:id', getOne)
 app.post('/todos', todoCreateValidation, handleValidationErrors, create)
 app.patch('/todos/:id', todoCreateValidation, handleValidationErrors, update)
 app.delete('/todos/:id', remove)
