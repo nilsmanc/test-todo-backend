@@ -13,35 +13,6 @@ export const getAll = async (req, res) => {
   }
 }
 
-export const remove = async (req, res) => {
-  try {
-    const todoId = req.params.id
-
-    TodosModel.findOneAndDelete(
-      {
-        _id: todoId,
-      },
-      (err, doc) => {
-        if (!doc) {
-          return res.status(404).json({
-            message: 'Todo not found',
-          })
-        }
-
-        res.json({
-          success: true,
-        })
-      },
-    )
-  } catch (err) {
-    console.log(err)
-
-    res.status(500).json({
-      message: 'Failed to delete todo',
-    })
-  }
-}
-
 export const create = async (req, res) => {
   try {
     const doc = new TodosModel({
@@ -86,6 +57,35 @@ export const update = async (req, res) => {
     console.log(err)
     res.status(500).json({
       message: 'Failed to update todo',
+    })
+  }
+}
+
+export const remove = async (req, res) => {
+  try {
+    const todoId = req.params.id
+
+    TodosModel.findOneAndDelete(
+      {
+        _id: todoId,
+      },
+      (err, doc) => {
+        if (!doc) {
+          return res.status(404).json({
+            message: 'Todo not found',
+          })
+        }
+
+        res.json({
+          success: true,
+        })
+      },
+    )
+  } catch (err) {
+    console.log(err)
+
+    res.status(500).json({
+      message: 'Failed to delete todo',
     })
   }
 }
