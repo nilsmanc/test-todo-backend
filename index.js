@@ -8,6 +8,7 @@ import { create, getAll, getOne, remove, update } from './controllers/TodoContro
 import { todoCreateValidation } from './validations.js'
 import handleValidationErrors from './utils/handleValidationErrors.js'
 
+//Подключение БД
 mongoose
   .connect(process.env.MONGODB)
   .then(() => console.log('Database OK'))
@@ -15,23 +16,29 @@ mongoose
 
 const app = express()
 
+//Создание хранилища для файлов
 const storage = multer.diskStorage({
+  // Когда будет создаваться хранилище функция создает папку uploads
   destination: (_, __, cb) => {
     if (!fs.existsSync('uploads')) {
       fs.mkdirSync('uploads')
     }
     cb(null, 'uploads')
   },
+  // Файл будет называться своим оригинальным названием
   filename: (_, file, cb) => {
     cb(null, file.originalname)
   },
 })
-
+// Переменная позволяющая использовать multer
 const upload = multer({ storage })
 
+// Чтобы читать json из запросов
 app.use(express.json())
+// Чтобы не было ошибок cors
 app.use(cors())
 
+//Для возврата статических файлов
 app.use('/uploads', express.static('uploads'))
 
 app.get('/todos', getAll)
