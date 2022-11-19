@@ -18,9 +18,11 @@ export const getOne = async (req, res) => {
     const todoId = req.params.id
 
     const todo = await TodosModel.findById(todoId).exec()
+
     res.json(todo)
   } catch (err) {
     console.log(err)
+
     res.status(500).json({
       message: 'Failed to get todo',
     })
@@ -34,6 +36,7 @@ export const create = async (req, res) => {
       description: req.body.description,
       date: req.body.date,
       file: req.body.file,
+      done: req.body.done,
     })
 
     const todo = await doc.save()
@@ -61,6 +64,7 @@ export const update = async (req, res) => {
         description: req.body.description,
         date: req.body.date,
         file: req.body.file,
+        done: req.body.done,
       },
     )
 
@@ -69,6 +73,7 @@ export const update = async (req, res) => {
     })
   } catch (err) {
     console.log(err)
+
     res.status(500).json({
       message: 'Failed to update todo',
     })

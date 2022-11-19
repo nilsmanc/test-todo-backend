@@ -4,13 +4,12 @@ import cors from 'cors'
 import multer from 'multer'
 import fs from 'fs'
 
-import { mongoDB } from './variables.js'
 import { create, getAll, getOne, remove, update } from './controllers/TodoController.js'
 import { todoCreateValidation } from './validations.js'
 import handleValidationErrors from './utils/handleValidationErrors.js'
 
 mongoose
-  .connect(mongoDB)
+  .connect(process.env.MONGODB)
   .then(() => console.log('Database OK'))
   .catch((err) => console.log('Database error', err))
 
@@ -36,10 +35,10 @@ app.use(cors())
 app.use('/uploads', express.static('uploads'))
 
 app.get('/todos', getAll)
-app.get('/todos/:id', getOne)
 app.post('/todos', todoCreateValidation, handleValidationErrors, create)
-app.patch('/todos/:id', todoCreateValidation, handleValidationErrors, update)
-app.delete('/todos/:id', remove)
+app.get('/todo/:id', getOne)
+app.patch('/todo/:id', todoCreateValidation, handleValidationErrors, update)
+app.delete('/todo/:id', remove)
 
 app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
