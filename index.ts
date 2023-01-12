@@ -4,29 +4,32 @@ import cors from 'cors'
 import multer from 'multer'
 import fs from 'fs'
 
-import { create, getAll, getOne, remove, update } from './controllers/TodoController.js'
-import { todoCreateValidation } from './validations.js'
-import handleValidationErrors from './utils/handleValidationErrors.js'
+import { create, getAll, getOne, remove, update } from './controllers/TodoController'
+import { todoCreateValidation } from './validations'
+import handleValidationErrors from './utils/handleValidationErrors'
 
 //Подключение БД
 mongoose
-  .connect(process.env.MONGODB)
+  .connect(process.env.MONGODB as string)
   .then(() => console.log('Database OK'))
   .catch((err) => console.log('Database error', err))
 
 const app = express()
 
+type DestinationCallback = (error: Error | null, destination: string) => void
+type FileNameCallback = (error: Error | null, filename: string) => void
+
 //Создание хранилища для файлов
 const storage = multer.diskStorage({
   // Когда будет создаваться хранилище функция создает папку uploads
-  destination: (_, __, cb) => {
+  destination: (_: Express.Request, __: Express.Multer.File, cb: DestinationCallback): void => {
     if (!fs.existsSync('uploads')) {
       fs.mkdirSync('uploads')
     }
     cb(null, 'uploads')
   },
   // Файл будет называться своим оригинальным названием
-  filename: (_, file, cb) => {
+  filename: (_: Express.Request, file: Express.Multer.File, cb: FileNameCallback): void => {
     cb(null, file.originalname)
   },
 })
@@ -49,13 +52,10 @@ app.delete('/todo/:id', remove)
 
 app.post('/upload', upload.single('image'), (req, res) => {
   res.json({
-    url: `/uploads/${req.file.originalname}`,
+    url: `/uploads/${req.file?.originalname}`,
   })
 })
 
-app.listen(process.env.PORT || 4444, (err) => {
-  if (err) {
-    return console.log(err)
-  }
+app.listen(process.env.PORT || 4444, () => {
   console.log('Server OK')
 })

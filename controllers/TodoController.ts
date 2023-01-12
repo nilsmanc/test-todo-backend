@@ -1,6 +1,8 @@
-import TodosModel from '../models/Todo.js'
+import { Request, Response } from 'express'
 
-export const getAll = async (req, res) => {
+import TodosModel from '../models/Todo'
+
+export const getAll = async (req: Request, res: Response) => {
   try {
     const todos = await TodosModel.find().exec()
 
@@ -13,7 +15,7 @@ export const getAll = async (req, res) => {
   }
 }
 
-export const getOne = async (req, res) => {
+export const getOne = async (req: Request, res: Response) => {
   try {
     const todoId = req.params.id
 
@@ -29,7 +31,7 @@ export const getOne = async (req, res) => {
   }
 }
 
-export const create = async (req, res) => {
+export const create = async (req: Request, res: Response) => {
   try {
     const doc = new TodosModel({
       title: req.body.title,
@@ -51,7 +53,7 @@ export const create = async (req, res) => {
   }
 }
 
-export const update = async (req, res) => {
+export const update = async (req: Request, res: Response) => {
   try {
     const todoId = req.params.id
 
@@ -80,7 +82,7 @@ export const update = async (req, res) => {
   }
 }
 
-export const remove = async (req, res) => {
+export const remove = async (req: Request, res: Response) => {
   try {
     const todoId = req.params.id
 
@@ -88,7 +90,7 @@ export const remove = async (req, res) => {
       {
         _id: todoId,
       },
-      (err, doc) => {
+      (err: Error, doc: Document) => {
         if (!doc) {
           return res.status(404).json({
             message: 'Todo not found',

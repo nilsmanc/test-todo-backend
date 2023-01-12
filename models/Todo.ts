@@ -1,6 +1,14 @@
 import mongoose from 'mongoose'
 
-const TodoSchema = new mongoose.Schema({
+interface Todo extends Document {
+  title: string
+  description: string
+  date: string
+  done: boolean
+  file: string
+}
+
+const TodoSchema = new mongoose.Schema<Todo>({
   title: {
     type: String,
     required: true,
@@ -17,4 +25,4 @@ const TodoSchema = new mongoose.Schema({
   file: String,
 })
 
-export default mongoose.model('Todo', TodoSchema)
+export default mongoose.model<Todo>('Todo', TodoSchema)
